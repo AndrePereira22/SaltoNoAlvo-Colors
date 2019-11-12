@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<list>
+  <usuario>
+    <nome>viado </nome>
+    <pontuacao>25</pontuacao>
+  </usuario>
+  <usuario>
+    <nome></nome>
+    <pontuacao>20</pontuacao>
+  </usuario>
+  <usuario>
+    <nome></nome>
+    <pontuacao>15</pontuacao>
+  </usuario>
+  <usuario>
+    <nome></nome>
+    <pontuacao>30</pontuacao>
+  </usuario>
+  <usuario>
+    <nome></nome>
+    <pontuacao>5</pontuacao>
+  </usuario>
+  <usuario>
+    <nome></nome>
+    <pontuacao>10</pontuacao>
+  </usuario>
+  <usuario>
+    <nome></nome>
+    <pontuacao>5</pontuacao>
+  </usuario>
+</list>
