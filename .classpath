@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="baseDados/" kind="src" path="SaltoNoAlvo/SaltoNoAlvo"/>
+	<classpathentry kind="src" path="SaltoNoAlvo/SaltoNoAlvo/baseDados"/>
+	<classpathentry kind="lib" path="SaltoNoAlvo/lib/dom4j-1.6.1.jar"/>
+	<classpathentry kind="lib" path="SaltoNoAlvo/lib/jdom-2.0.6.jar"/>
+	<classpathentry kind="lib" path="SaltoNoAlvo/lib/xstream-1.3.1.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="SaltoNoAlvo/bin"/>
+</classpath>
