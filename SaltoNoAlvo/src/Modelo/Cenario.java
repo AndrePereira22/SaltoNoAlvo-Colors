@@ -13,8 +13,8 @@ import java.util.StringTokenizer;
 import javax.imageio.ImageIO;
 
 public class Cenario {
-	private final int numeroColunas =27 ;
-	private final int numeroLinhas = 16;
+	private final int numeroColunas =28 ;
+	private final int numeroLinhas = 24;
 	private final int colunasTileSet = 8;
 	private final int tileSize = 32;
 

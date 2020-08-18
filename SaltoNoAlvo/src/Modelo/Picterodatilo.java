@@ -13,7 +13,7 @@ public class Picterodatilo {
 
 	public Picterodatilo(String url) {
 
-		posPtero = new Point(0, 25);
+		posPtero = new Point(0, 125);
 		velPtero = 30;
 		try {
 			imgPterodatilo =ImageIO.read(getClass().getClassLoader().getResourceAsStream(url));

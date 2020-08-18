@@ -5,8 +5,8 @@ import Visao.Ajuda;
 import Visao.Configuracoes;
 import Visao.Cores;
 import Visao.Creditos;
-import Visao.Fase1;
-import Visao.Fase2;
+import Visao.FaseCores;
+import Visao.FaseBandeiras;
 import Visao.Inventario;
 import Visao.Janela;
 import Visao.Menu;
@@ -18,15 +18,15 @@ public class app {
 
 	private static final int LARGURA=649,ALTURA=601;
 	private static final int A_INVENTARIO=86,L_INVENTARIO=849; 
-	private static final int L_FASE=885,A_FASE=511;
+	private static final int L_FASE=912,A_FASE=620;
 	private static final int L_QUESTOES=851,A_QUESTOES=53;
 	
 	public static void main(String[] args) {
 		
 		Janela janela = new Janela(LARGURA, ALTURA);
 		Cores cores = new Cores(LARGURA, ALTURA);
-		Fase1 fase1 = new Fase1(L_FASE,A_FASE);
-		Fase2 fase2 = new Fase2(L_FASE,A_FASE);
+		FaseCores fase1 = new FaseCores(L_FASE,A_FASE);
+		FaseBandeiras fase2 = new FaseBandeiras(L_FASE,A_FASE);
 		Menu menu = new Menu(LARGURA, ALTURA);
 		Creditos creditos= new Creditos(LARGURA, ALTURA);
 		Ajuda ajuda = new Ajuda(LARGURA, ALTURA);

@@ -22,8 +22,8 @@ import Visao.Ajuda;
 import Visao.Configuracoes;
 import Visao.Cores;
 import Visao.Creditos;
-import Visao.Fase1;
-import Visao.Fase2;
+import Visao.FaseCores;
+import Visao.FaseBandeiras;
 import Visao.Inventario;
 import Visao.Janela;
 import Visao.Mensagem;
@@ -34,23 +34,20 @@ import Visao.Score;
 
 public class ControleGeral implements ActionListener,Runnable,KeyListener   {
 
-	Fase1 fase1;
-	Fase2 fase2;
+	FaseCores faseAlvo;
+	FaseBandeiras faseBandeiras;
 	Janela janela;
 	Menu menu;
 	Cores cores;
-	Inventario inventario;
 	Creditos creditos;
 	Configuracoes config;
 	Ajuda ajuda;
 	Score score;
 	Ranking ranking;
-	Pergunta perguntas;
 	Picterodatilo picterodatilo;
 	Sprite caverna;
 	Audio audio;
 	Alvo alvo;
-	Controle_Fase2 controleFase2;
 	Mensagem mensagem;
 
 	HashMap<Integer, Boolean> keyEventos;  // Eventos de Teclado
@@ -81,20 +78,18 @@ public class ControleGeral implements ActionListener,Runnable,KeyListener   {
 	int i=0;
 	int tamanho;
 
-	public ControleGeral(Fase1 fase,Fase2 fase2,Janela janela,Menu menu,Inventario inventario,Creditos creditos,Configuracoes config,
+	public ControleGeral(FaseCores fase,FaseBandeiras fase2,Janela janela,Menu menu,Inventario inventario,Creditos creditos,Configuracoes config,
 			Ajuda ajuda,Ranking recordes,Score resultados,Pergunta perguntas,Cores cores) {
 
-		this.fase1=fase;
-		this.fase2=fase2;
+		this.faseAlvo=fase;
+		this.faseBandeiras=fase2;
 		this.janela=janela;
 		this.menu=menu;
-		this.inventario=inventario;
 		this.creditos=creditos;
 		this.config=config;
 		this.ajuda=ajuda;
 		this.ranking=recordes;
 		this.score=resultados;
-		this.perguntas=perguntas;
 		this.cores =cores;
 
 		picterodatilo=fase.getPicterodatilo();
@@ -115,7 +110,6 @@ public class ControleGeral implements ActionListener,Runnable,KeyListener   {
 		AlvoMaximo=600;
 		estado = EST_ERRO;
 
-		janela.add(inventario);
 		janela.add(cores);
 		janela.add(menu);
 		janela.add(config);
@@ -125,7 +119,6 @@ public class ControleGeral implements ActionListener,Runnable,KeyListener   {
 		janela.add(resultados);
 		janela.add(fase);
 		janela.add(fase2);
-		janela.add(perguntas);
 		ControleEventos();
 	
 		
@@ -136,8 +129,8 @@ public class ControleGeral implements ActionListener,Runnable,KeyListener   {
 	}
 	private void ControleEventos() {
 
-		fase1.addKeyListener(this);
-		fase2.addKeyListener(this);
+		faseAlvo.addKeyListener(this);
+		faseBandeiras.addKeyListener(this);
 		menu.addKeyListener(this);
 		score.addKeyListener(this);
 		menu.getBtnJogar().addActionListener(this);
@@ -194,7 +187,7 @@ public class ControleGeral implements ActionListener,Runnable,KeyListener   {
 		
 		if(e.getSource()==config.getBtnAvancar()) {
 
-			inventario.getJogador().setText(config.getTxtJogador());
+			
 			if(config.VerificarSelecao(config.getRadioMedio())) {
 				OpcaoVelocidade=15;
 				OpcaoVelocidadeMinima=4;
@@ -219,11 +212,9 @@ public class ControleGeral implements ActionListener,Runnable,KeyListener   {
 			run();
 		}
 		score.FecharVisible();
-		fase1.setLocation(0,0);
-		AtualizarTela(fase1,config);
-		janela.setSize(845,663 );
-		inventario.AbriVisible();
-		perguntas.AbriVisible();
+		faseAlvo.setLocation(0,0);
+		AtualizarTela(faseAlvo,config);
+		janela.setSize(912,620 );
 		runReinicio();
 		Atualizar();
 	}
@@ -259,12 +250,9 @@ public class ControleGeral implements ActionListener,Runnable,KeyListener   {
 
 	public void runEstadoFinal() {
 
-		fase1.setLocation(1000, 0);
-		score.getLblJogador().setText(inventario.getTxtJogador());
-		score.getLblPontuacao().setText(inventario.getTxtPontuacao());
-		AtualizarTela(score, fase1);
-		inventario.FecharVisible();
-		perguntas.FecharVisible();
+		faseAlvo.setLocation(1000, 0);
+		
+		AtualizarTela(score, faseAlvo);
 		janela.setSize( score.getWidth(),score.getHeight());
 
 		if (keyEventos.get(KeyEvent.VK_ENTER) != null) {
@@ -286,32 +274,29 @@ public class ControleGeral implements ActionListener,Runnable,KeyListener   {
 	}
 	public void runMoveAviao() {
 
-		if(estado==EST_CAINDO && picterodatilo.getPosPtero().x > fase1.getLARGURA()) {
+		if(estado==EST_CAINDO && picterodatilo.getPosPtero().x > faseAlvo.getLARGURA()) {
 
 			picterodatilo.getPosPtero().x += 10;	
 		}else {
 			picterodatilo.getPosPtero().x += picterodatilo.velPtero;
 		}
 
-		if (picterodatilo.getPosPtero().x >fase1.getLARGURA() + 200) {
+		if (picterodatilo.getPosPtero().x >faseAlvo.getLARGURA() + 200) {
 			runReinicio();
 		}
 	}
 	public void runControleDoJogo() {
 
-		if(pontuacao==NEXT_FASE && fase1.isVisible() && estado !=EST_PARADO) {
+		if(pontuacao==NEXT_FASE && faseAlvo.isVisible() && estado !=EST_PARADO) {
 			try {
 				mensagem.exibirMensagem("Nivel 2!","/aviao2.png");
 				estado=EST_FINAL;
-				fase1.FecharVisible();
-				perguntas.FecharVisible();
-				fase1.setLocation(1000, 0);
+				faseAlvo.FecharVisible();
+				faseAlvo.setLocation(1000, 0);
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {}
 
-			Controle_Fase2 controle = new Controle_Fase2(fase2,janela,inventario,
-					score, perguntas);	
-			controle.run();
+		
 		}
 		if(pontuacao==30 && !config.VerificarSelecao(config.getRadioDificil())) {
 			OpcaoVelocidade=15;
@@ -370,53 +355,19 @@ public class ControleGeral implements ActionListener,Runnable,KeyListener   {
 				caverna.aparencia=0;
 
 				pontuacao+=5;
-				inventario.getPontuacao().setText(new String(""+pontuacao));
 
 				// Som de acerto.
 				audio.getSndAcerto().play();
 				audio.getSndPterodatilo().stop();
 
 
-				perguntas.setLblX(Inventario.getPergunta());
-
-				perguntas.getTextField().grabFocus();
-
-				perguntas.getTextField().addKeyListener(new KeyAdapter() {
-
-					public void keyPressed(KeyEvent k) {
-
-						if(k.getKeyCode()==KeyEvent.VK_ENTER && fase1.isVisible()) {
-
-							if(pontuacao!=NEXT_FASE) {
-
-								op=perguntas.getTextField().getText();
-								
-								if(!op.equals("")) {
-								
-								if(op.equalsIgnoreCase(alvo.getCor()) ) {
-									pontuacao+=5;
-									inventario.getPontuacao().setText(new String(""+pontuacao));
-								
-									mensagem.exibirMensagem("Acertou : "+alvo.getCor(),alvo.getCaminho());
-									
-								}else 
-									mensagem.exibirMensagem("Errou ! \nResposta : "+alvo.getCor(),alvo.getCaminho());
-								
-								}
-							}
-							if(pontuacao>100)pontuacao=100;  fase1.requestFocus();
-							runReinicio();
-							}
-						}
-					
-				});
+				
 				 
 			} else {
 				// Se esta fora do alvo, muda o estado para erro.
 				estado = EST_ERRO;
 				caverna.aparencia=2;
 				tentativas--;
-				inventario.getTentativas().setText(new String("0"+tentativas));
 
 				// Som de erro.
 				audio.getSndErro().play();
@@ -441,8 +392,7 @@ public class ControleGeral implements ActionListener,Runnable,KeyListener   {
 	}	
 	public void runReinicio() {
 
-		perguntas.setLblX("");
-		perguntas.getTextField().setText("");
+
 
 		estado = EST_VOANDO;
 		picterodatilo.getPosPtero().x=-100;
@@ -456,7 +406,7 @@ public class ControleGeral implements ActionListener,Runnable,KeyListener   {
 		alvo.getPosAlvo().x = alvoMinimo+rnd.nextInt(AlvoMaximo);
 
 		// Para o som atual do pterodatilo.
-		if(fase1.isVisible() && pontuacao !=NEXT_FASE) {
+		if(faseAlvo.isVisible() && pontuacao !=NEXT_FASE) {
 			audio.getSndPterodatilo().stop();
 			audio.getSndPterodatilo().loop();
 		}
@@ -488,13 +438,11 @@ public class ControleGeral implements ActionListener,Runnable,KeyListener   {
 	public void VoltarMenu() {
 		audio.getSndMusic().loop();
 		ResetarValores();
-		fase1.setLocation(1000, 0);
-		fase2.setLocation(1000, 0);
-		fase2.FecharVisible();
-		AtualizarTela(menu,fase1);
-		inventario.FecharVisible();
+		faseAlvo.setLocation(1000, 0);
+		faseBandeiras.setLocation(1000, 0);
+		faseBandeiras.FecharVisible();
+		AtualizarTela(menu,faseAlvo);
 		estado=EST_PARADO;
-		perguntas.FecharVisible();
 		janela.setSize(menu.getWidth(), menu.getHeight());
 		score.FecharVisible();
 		audio.getSndPterodatilo().stop();
@@ -502,20 +450,16 @@ public class ControleGeral implements ActionListener,Runnable,KeyListener   {
 	}
 	public void ReiniciarFase() {
 		ResetarValores();
-		fase1.setLocation(0, 81);
+		faseAlvo.setLocation(0, 81);
 		janela.setSize(845, 608);
-		AtualizarTela(fase1,score);
-		inventario.AbriVisible();
+		AtualizarTela(faseAlvo,score);
 		janela.setSize(845,663 );
-		perguntas.AbriVisible();
 		runReinicio();
 		Atualizar();
 	}
 
 	public void ResetarValores(){
-		inventario.getPontuacao().setText("0");
-		inventario.getTentativas().setText("10");
-		inventario.getNivel().setText("1");
+		
 		tentativas=10;
 		pontuacao=0;
 	}
@@ -530,67 +474,67 @@ public class ControleGeral implements ActionListener,Runnable,KeyListener   {
 
 	}
 	public void salvarXML() {
-		if(SalvarDadosXml.listar()!=null) {
-			ArrayList<Usuario> u = SalvarDadosXml.listar();
-			u.add(new Usuario(inventario.getJogador().getText(),inventario.getPontuacao().getText()));
-			SalvarDadosXml.gravarXML(u);
-		}else {
-			ArrayList<Usuario> users = new ArrayList<Usuario>();
-			users.add(new Usuario(inventario.getJogador().getText(),inventario.getPontuacao().getText()));
-			SalvarDadosXml.gravarXML(users);
-		}
+//		if(SalvarDadosXml.listar()!=null) {
+//			ArrayList<Usuario> u = SalvarDadosXml.listar();
+//			u.add(new Usuario(inventario.getJogador().getText(),inventario.getPontuacao().getText()));
+//			SalvarDadosXml.gravarXML(u);
+//		}else {
+//			ArrayList<Usuario> users = new ArrayList<Usuario>();
+//			users.add(new Usuario(inventario.getJogador().getText(),inventario.getPontuacao().getText()));
+//			SalvarDadosXml.gravarXML(users);
+//		}
 	}
 	public void mudarAlvo(){
 	
 		switch(alvo.getCor()){
 
 		case "BLUE":
-			alvo.setAlvo(fase1.getAlvoVerde());
+			alvo.setAlvo(faseAlvo.getAlvoVerde());
 			alvo.setCor("GREEN");
 			alvo.setCaminho("/alvo2.png");
 			break;
 		case "GREEN":
-			alvo.setAlvo(fase1.getAlvoAmarelo());
+			alvo.setAlvo(faseAlvo.getAlvoAmarelo());
 			alvo.setCor("YELLOW");
 			alvo.setCaminho("/alvo3.png");
 			break;
 		case "YELLOW":
-			alvo.setAlvo(fase1.getAlvoVermelho());
+			alvo.setAlvo(faseAlvo.getAlvoVermelho());
 			alvo.setCor("RED");
 			alvo.setCaminho("/alvo4.png");
 			break;
 		case "RED":
-			alvo.setAlvo(fase1.getAlvoRosa());
+			alvo.setAlvo(faseAlvo.getAlvoRosa());
 			alvo.setCor("PINK");
 			alvo.setCaminho("/alvo5.png");
 			break;
 		case "PINK":
-			alvo.setAlvo(fase1.getAlvoLaranja());
+			alvo.setAlvo(faseAlvo.getAlvoLaranja());
 			alvo.setCor("ORANGE");
 			alvo.setCaminho("/alvo6.png");
 			break;
 		case "ORANGE":
-			alvo.setAlvo(fase1.getAlvoCinza());
+			alvo.setAlvo(faseAlvo.getAlvoCinza());
 			alvo.setCor("GREY");
 			alvo.setCaminho("/alvo7.png");
 			break;
 		case "GREY":
-			alvo.setAlvo(fase1.getAlvoBranco());
+			alvo.setAlvo(faseAlvo.getAlvoBranco());
 			alvo.setCor("WHITE");
 			alvo.setCaminho("/alvo8.png");
 			break;
 		case "WHITE":
-			alvo.setAlvo(fase1.getAlvoPreto());
+			alvo.setAlvo(faseAlvo.getAlvoPreto());
 			alvo.setCor("BLACK");
 			alvo.setCaminho("/alvo9.png");
 			break;
 		case "BLACK":
-			alvo.setAlvo(fase1.getAlvoMarrom());
+			alvo.setAlvo(faseAlvo.getAlvoMarrom());
 			alvo.setCor("BROWN");
 			alvo.setCaminho("/alvo10.png");
 			break;
 		case "BROWN":
-			alvo.setAlvo(fase1.getAlvoAzul());
+			alvo.setAlvo(faseAlvo.getAlvoAzul());
 			alvo.setCor("BLUE");
 			alvo.setCaminho("/alvo1.png");
 			break;

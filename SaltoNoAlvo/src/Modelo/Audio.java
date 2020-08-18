@@ -9,7 +9,7 @@ public class Audio {
 	private AudioClip sndPterodatilo, sndCaindo, sndAcerto,sndErro,sndMusic;
 
 	public Audio() {
-		sndPterodatilo = Applet.newAudioClip(getClass().getResource("/aviao.wav"));
+		sndPterodatilo = Applet.newAudioClip(getClass().getResource("/audio.wav"));
 		sndCaindo = Applet.newAudioClip(getClass().getResource("/caindo.wav"));
 		sndAcerto = Applet.newAudioClip(getClass().getResource("/acerto.wav"));
 		sndErro = Applet.newAudioClip(getClass().getResource("/erro.wav"));
