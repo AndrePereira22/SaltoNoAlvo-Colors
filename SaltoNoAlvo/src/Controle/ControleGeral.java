@@ -26,9 +26,7 @@ import Visao.FaseCores;
 import Visao.FaseBandeiras;
 import Visao.Inventario;
 import Visao.Janela;
-import Visao.Mensagem;
 import Visao.Menu;
-import Visao.Pergunta;
 import Visao.Ranking;
 import Visao.Score;
 
@@ -48,7 +46,7 @@ public class ControleGeral implements ActionListener,Runnable,KeyListener   {
 	Sprite caverna;
 	Audio audio;
 	Alvo alvo;
-	Mensagem mensagem;
+	
 
 	HashMap<Integer, Boolean> keyEventos;  // Eventos de Teclado
 	boolean ativo;						// controlar Thread da classe controle Geral
@@ -79,7 +77,7 @@ public class ControleGeral implements ActionListener,Runnable,KeyListener   {
 	int tamanho;
 
 	public ControleGeral(FaseCores fase,FaseBandeiras fase2,Janela janela,Menu menu,Inventario inventario,Creditos creditos,Configuracoes config,
-			Ajuda ajuda,Ranking recordes,Score resultados,Pergunta perguntas,Cores cores) {
+			Ajuda ajuda,Ranking recordes,Score resultados,Cores cores) {
 
 		this.faseAlvo=fase;
 		this.faseBandeiras=fase2;
@@ -99,7 +97,6 @@ public class ControleGeral implements ActionListener,Runnable,KeyListener   {
 		keyEventos = new HashMap<Integer, Boolean>();
 		rnd = new Random();
 		audio =new Audio();
-		mensagem= new Mensagem();
 		
 		delay = 1;
 		tentativas=10;
@@ -289,7 +286,7 @@ public class ControleGeral implements ActionListener,Runnable,KeyListener   {
 
 		if(pontuacao==NEXT_FASE && faseAlvo.isVisible() && estado !=EST_PARADO) {
 			try {
-				mensagem.exibirMensagem("Nivel 2!","/aviao2.png");
+				
 				estado=EST_FINAL;
 				faseAlvo.FecharVisible();
 				faseAlvo.setLocation(1000, 0);
