@@ -2,6 +2,7 @@ package Visao;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
@@ -19,8 +20,11 @@ public class FaseBandeiras  extends Jogo  {
 	private Sprite caverna;
 	private Alvo alvo;
 	private BufferedImage canada,espanha,eua,franca,italia,noruega,suiça,belgica,alemanha,finlandia;
-	
+	private ArrayList<BufferedImage> imagens;
 	private Picterodatilo picterodatilo;
+	String listaCores[] = { "canada", "espanha", "eua", "franca", "italia", "noruega", "suiça", "belgica", "alemanha","finlandia" };
+	String url[] = { "/canada.png", "/espanha.png", "/eua.png", "/franca.png", "/italia.png", "/noruega.png", "/suiça.png",
+			"/belgica.png", "/alemanha.png", "/finlandia.png" };
 	
 	public FaseBandeiras(int largura,int altura) {
 		super(largura,altura);
@@ -36,26 +40,42 @@ public class FaseBandeiras  extends Jogo  {
 		try {
 			caverna = new Sprite("sprite.png",2,3,1,170,170);
 			alvo = new Alvo("alvo1.png","BLUE");
+			imagens = new ArrayList<BufferedImage>();
 		
 	} catch (IOException e) {
 		System.out.println("a imagem caverna fase2");
 	}
 		try {
-			canada=(ImageIO.read(getClass().getClassLoader().getResourceAsStream("alvo2.png")));
-			espanha=(ImageIO.read(getClass().getClassLoader().getResourceAsStream("alvo3.png")));
-			eua=(ImageIO.read(getClass().getClassLoader().getResourceAsStream("alvo1.png")));
-			franca=(ImageIO.read(getClass().getClassLoader().getResourceAsStream("alvo4.png")));
-			italia=(ImageIO.read(getClass().getClassLoader().getResourceAsStream("alvo5.png")));
-			noruega=(ImageIO.read(getClass().getClassLoader().getResourceAsStream("alvo6.png")));
-			suiça=(ImageIO.read(getClass().getClassLoader().getResourceAsStream("alvo7.png")));
-			belgica=(ImageIO.read(getClass().getClassLoader().getResourceAsStream("alvo8.png")));
+			canada=(ImageIO.read(getClass().getClassLoader().getResourceAsStream("canada.png")));
+			espanha=(ImageIO.read(getClass().getClassLoader().getResourceAsStream("espanha.png")));
+			eua=(ImageIO.read(getClass().getClassLoader().getResourceAsStream("eua.png")));
+			franca=(ImageIO.read(getClass().getClassLoader().getResourceAsStream("franca.png")));
+			italia=(ImageIO.read(getClass().getClassLoader().getResourceAsStream("italia.png")));
+			noruega=(ImageIO.read(getClass().getClassLoader().getResourceAsStream("noruega.png")));
+			suiça=(ImageIO.read(getClass().getClassLoader().getResourceAsStream("suiça.png")));
+			belgica=(ImageIO.read(getClass().getClassLoader().getResourceAsStream("belgica.png")));
 			alemanha=(ImageIO.read(getClass().getClassLoader().getResourceAsStream("alemanha.png")));
-			finlandia=(ImageIO.read(getClass().getClassLoader().getResourceAsStream("alvo10.png")));
+			finlandia=(ImageIO.read(getClass().getClassLoader().getResourceAsStream("finlandia.png")));
+		
+			adicionarAlvos();
+			
 		} catch (IOException e) {
 			System.out.println("erro ao carregar alvo");
 		}
-		picterodatilo = new Picterodatilo("aviao2.png");
+		picterodatilo = new Picterodatilo("/aviao1.gif");
 				
+	}
+	public void adicionarAlvos() {
+		imagens.add(canada);
+		imagens.add(espanha);
+		imagens.add(eua);
+		imagens.add(franca);
+		imagens.add(italia);
+		imagens.add(noruega);
+		imagens.add(suiça);
+		imagens.add(belgica);
+		imagens.add(alemanha);
+		imagens.add(finlandia);
 	}
 	
 	public void Update() {
@@ -65,13 +85,12 @@ public class FaseBandeiras  extends Jogo  {
 		g.drawImage(mapa1.getMapa(),0, 0, null);
 		g.drawImage(mapa2.getMapa(),0, 0, null);
 		
-		g.drawImage(picterodatilo.getImgPterodatilo(), picterodatilo.getPosPtero().x, 
-				picterodatilo.getPosPtero().y, null);
-		
 		g.drawImage(alvo.getAlvo(), alvo.getPosAlvo().x, alvo.getPosAlvo().y-2, null);
 			
-		g.drawImage(caverna.sprites[caverna.aparencia],(int) caverna.posJogador.x -17,
-                (int) caverna.posJogador.y-44 , null);
+		g.drawImage(caverna.sprites[caverna.aparencia],(int) caverna.posJogador.x +13,
+                (int) caverna.posJogador.y-43 , null);
+		g.drawImage(picterodatilo.getImgPterodatilo().getImage(), picterodatilo.getPosPtero().x, 
+				picterodatilo.getPosPtero().y, null);
 	}  
 	public Sprite getCaverna() {
 		return caverna;
@@ -171,6 +190,15 @@ public class FaseBandeiras  extends Jogo  {
 	}
 	public void setPicterodatilo(Picterodatilo picterodatilo) {
 		this.picterodatilo = picterodatilo;
+	}
+	public String[] getListaCores() {
+		return listaCores;
+	}
+	public String[] getUrl() {
+		return url;
+	}
+	public ArrayList<BufferedImage> getImagens() {
+		return imagens;
 	}
 	
 	

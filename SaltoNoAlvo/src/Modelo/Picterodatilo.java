@@ -4,10 +4,11 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 
 public class Picterodatilo {
 
-	private BufferedImage imgPterodatilo;
+	private ImageIcon imgPterodatilo;
 	public int velPtero;
 	private Point posPtero;
 
@@ -15,17 +16,17 @@ public class Picterodatilo {
 
 		posPtero = new Point(0, 125);
 		velPtero = 30;
-		try {
-			imgPterodatilo =ImageIO.read(getClass().getClassLoader().getResourceAsStream(url));
-		} catch (IOException e) {
-			System.out.println("erro na imagem picterodatilo");
-		}
+		imgPterodatilo = new ImageIcon(getClass().getResource(url));
 	}
-	public BufferedImage getImgPterodatilo() {
-		return imgPterodatilo;
-	}
+	
 
 	public Point getPosPtero() {
 		return posPtero;
 	}
+
+
+	public ImageIcon getImgPterodatilo() {
+		return imgPterodatilo;
+	}
+	
 }

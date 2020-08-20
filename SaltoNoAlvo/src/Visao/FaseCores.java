@@ -2,6 +2,7 @@ package Visao;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
@@ -19,6 +20,10 @@ public class FaseCores  extends Jogo  {
 	private Alvo alvo;
 	private BufferedImage alvoVerde,alvoAmarelo,alvoAzul,alvoVermelho,alvoRosa,alvoLaranja,alvoCinza,alvoBranco,alvoPreto,alvoMarrom;
 	private Picterodatilo picterodatilo;
+	private ArrayList<BufferedImage> imagens;
+	String listaCores[] = { "BLUE", "GREEN", "YELLOW", "RED", "PINK", "ORANGE", "GREY", "WHITE", "BLACK","BROWN" };
+	String urls[] = { "/alvo1.png", "/alvo2.png", "/alvo3.png", "/alvo4.png", "/alvo5.png", "/alvo6.png", "/alvo7.png",
+			"/alvo8.png", "/alvo9.png", "/alvo10.png" };
 	
 	public FaseCores(int largura,int altura) {
 		super(largura,altura);
@@ -38,14 +43,16 @@ public class FaseCores  extends Jogo  {
 	} catch (IOException e) {
 	System.out.println("Imagem caverna fase1");
 	}
-		picterodatilo = new Picterodatilo("aviao1.png");
+		picterodatilo = new Picterodatilo("/aviao1.gif");
 		alvo = new Alvo("alvo1.png","BLUE");
+		imagens = new ArrayList<BufferedImage>();
 		
 		
-		try {
+		try {			
+			alvoAzul=(ImageIO.read(getClass().getClassLoader().getResourceAsStream("alvo1.png")));
+
 			alvoVerde=(ImageIO.read(getClass().getClassLoader().getResourceAsStream("alvo2.png")));
 			alvoAmarelo=(ImageIO.read(getClass().getClassLoader().getResourceAsStream("alvo3.png")));
-			alvoAzul=(ImageIO.read(getClass().getClassLoader().getResourceAsStream("alvo1.png")));
 			alvoVermelho=(ImageIO.read(getClass().getClassLoader().getResourceAsStream("alvo4.png")));
 			alvoRosa=(ImageIO.read(getClass().getClassLoader().getResourceAsStream("alvo5.png")));
 			alvoLaranja=(ImageIO.read(getClass().getClassLoader().getResourceAsStream("alvo6.png")));
@@ -53,6 +60,10 @@ public class FaseCores  extends Jogo  {
 			alvoBranco=(ImageIO.read(getClass().getClassLoader().getResourceAsStream("alvo8.png")));
 			alvoPreto=(ImageIO.read(getClass().getClassLoader().getResourceAsStream("alvo9.png")));
 			alvoMarrom=(ImageIO.read(getClass().getClassLoader().getResourceAsStream("alvo10.png")));
+		
+			adicionarAlvos();
+			
+		
 		} catch (IOException e) {
 			System.out.println("erro ao carregar alvo");
 		}
@@ -66,16 +77,31 @@ public class FaseCores  extends Jogo  {
 		g.drawImage(mapa1.getMapa(),0, 0, null);
 		g.drawImage(mapa2.getMapa(),0, 0, null);
 		
-
-		g.drawImage(picterodatilo.getImgPterodatilo(), picterodatilo.getPosPtero().x,
-				picterodatilo.getPosPtero().y, null);
 		
 		g.drawImage(alvo.getAlvo(), alvo.getPosAlvo().x, alvo.getPosAlvo().y-2, null);
 		
 		
-		g.drawImage(caverna.sprites[caverna.aparencia],(int) caverna.posJogador.x +26,
-                (int) caverna.posJogador.y-38 , null);		
+		g.drawImage(caverna.sprites[caverna.aparencia],(int) caverna.posJogador.x +13,
+                (int) caverna.posJogador.y-43 , null);	
+		
+		g.drawImage(picterodatilo.getImgPterodatilo().getImage(), picterodatilo.getPosPtero().x,
+				picterodatilo.getPosPtero().y, null);
 	}  
+	
+	
+	public void adicionarAlvos() {
+		imagens.add(alvoAzul);
+		imagens.add(alvoVerde);
+		imagens.add(alvoAmarelo);
+		imagens.add(alvoVermelho);
+		imagens.add(alvoRosa);
+		imagens.add(alvoLaranja);
+		imagens.add(alvoCinza);
+		imagens.add(alvoBranco);
+		imagens.add(alvoPreto);
+		imagens.add(alvoMarrom);
+	}
+	
 	public Sprite getCaverna() {
 		return caverna;
 	}
@@ -168,6 +194,18 @@ public class FaseCores  extends Jogo  {
 	}
 	public void setAlvoMarrom(BufferedImage alvoMarrom) {
 		this.alvoMarrom = alvoMarrom;
+	}
+
+	public ArrayList<BufferedImage> getImagens() {
+		return imagens;
+	}
+
+	public String[] getListaCores() {
+		return listaCores;
+	}
+
+	public String[] getUrls() {
+		return urls;
 	}
 	
 }
