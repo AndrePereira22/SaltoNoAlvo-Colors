@@ -146,6 +146,7 @@ public class ControleGeral implements ActionListener, Runnable, KeyListener {
 		creditos.getBtnVoltar().addActionListener(this);
 		ranking.getBtnVoltar().addActionListener(this);
 		ajuda.getBtnVoltar().addActionListener(this);
+		pergunta.getResposta().addKeyListener(this);
 		cores.getVoltar().addActionListener(this);
 		cores.getAvançar().addActionListener(this);
 		pergunta.getBtnOk().addActionListener(this);
@@ -468,6 +469,10 @@ public class ControleGeral implements ActionListener, Runnable, KeyListener {
 		if (e.getKeyCode() == KeyEvent.VK_ALT && estado != EST_CAINDO) {
 			VoltarMenu();
 		}
+		if(e.getSource()==pergunta.getResposta() && e.getKeyCode() == KeyEvent.VK_ENTER ) {
+			verificarResposta();
+		}
+		
 	}
 
 	public void keyReleased(KeyEvent e) {

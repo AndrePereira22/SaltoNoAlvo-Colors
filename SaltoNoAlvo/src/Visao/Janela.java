@@ -21,10 +21,9 @@ public class Janela extends JFrame  {
 		setSize(largura, altura);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(true);
-		setUndecorated(true);
-		setLocationRelativeTo(null);
-		setBackground(Color.BLACK);
-		setForeground(Color.BLACK);
+		//setUndecorated(true);
+		//setLocationRelativeTo();
+		
 		  
 		Image iconeTitulo = Toolkit.getDefaultToolkit().getImage("baseDados\\caverna.png");
 		this.setIconImage(iconeTitulo);
