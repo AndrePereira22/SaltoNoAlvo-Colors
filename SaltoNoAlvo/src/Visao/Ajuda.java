@@ -14,7 +14,7 @@ public class Ajuda extends JPanel {
 
 private static final long serialVersionUID = 1L;
 	
-	private JButton btnVoltar;
+	private JButton btnVoltar,btnAvancar;
 	private JLabel lblCenario;
 	private JTextPane txtpnSpace;
 	private Font jokerman;
@@ -34,11 +34,19 @@ private static final long serialVersionUID = 1L;
 		txtpnSpace.setOpaque(false);
 		
 		btnVoltar = new JButton("Voltar");
-		btnVoltar.setBounds(70, 490, 170, 33);
+		btnVoltar.setBounds(100, 490, 170, 33);
 		btnVoltar.setFont(jokerman); 
 		btnVoltar.setForeground(Color.WHITE);
 		btnVoltar.setContentAreaFilled(false);
 		add(btnVoltar);
+		
+		btnAvancar = new JButton("Voltar");
+		btnAvancar.setBounds(370, 490, 170, 33);
+		btnAvancar.setFont(jokerman); 
+		btnAvancar.setForeground(Color.WHITE);
+		btnAvancar.setContentAreaFilled(false);
+		add(btnAvancar);
+		
 		
 		lblCenario = new JLabel(new ImageIcon(getClass().getResource("/menu.gif")));
 		lblCenario.setBounds(0, 0, 651, 601);
@@ -54,6 +62,10 @@ private static final long serialVersionUID = 1L;
 	public void AbriVisible() {
 		setVisible(true);
 	}
+	public JButton getBtnAvancar() {
+		return btnAvancar;
+	}
+	
 }
 
 

@@ -1,8 +1,8 @@
 package Controle;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Random;
 
-import javax.swing.JOptionPane;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import Modelo.Alvo;
@@ -23,9 +23,9 @@ import Visao.Ajuda;
 import Visao.Configuracoes;
 import Visao.Cores;
 import Visao.Creditos;
-import Visao.FaseCores;
 import Visao.FaseBandeiras;
-import Visao.Inventario;
+import Visao.FaseCores;
+import Visao.Fundo;
 import Visao.Janela;
 import Visao.Menu;
 import Visao.Pergunta;
@@ -50,7 +50,7 @@ public class ControleGeral implements ActionListener, Runnable, KeyListener {
 	Alvo alvo;
 	Pergunta pergunta;
 	Random rd;
-
+	Fundo inventario;
 	HashMap<Integer, Boolean> keyEventos; // Eventos de Teclado
 	boolean ativo; // controlar Thread da classe controle Geral
 
@@ -74,30 +74,29 @@ public class ControleGeral implements ActionListener, Runnable, KeyListener {
 
 	// converter as strings em int
 	int opicao = 0;
-	String op = "op";
 
 	// indices que serï¿½ pego no array de perguntas e o tamanho
 	int i = 0;
 	int tamanho;
 
-	public ControleGeral(FaseCores fase, FaseBandeiras fase2, Janela janela, Menu menu, Inventario inventario,
-			Creditos creditos, Configuracoes config, Ajuda ajuda, Ranking recordes, Score resultados, Cores cores) {
+	public ControleGeral(Janela janela) {
 
-		this.faseAlvo = fase;
-		this.faseBandeiras = fase2;
+		this.faseAlvo = janela.getFase1();
+		this.faseBandeiras = janela.getFase2();
 		this.janela = janela;
-		this.menu = menu;
-		this.creditos = creditos;
-		this.config = config;
-		this.ajuda = ajuda;
-		this.ranking = recordes;
-		this.score = resultados;
-		this.cores = cores;
+		this.menu = janela.getMenu();
+		this.creditos = janela.getCreditos();
+		this.config = janela.getConfig();
+		this.ajuda = janela.getAjuda();
+		this.ranking = janela.getRanking();
+		this.score = janela.getScore();
+		this.cores = janela.getCores();
+		this.inventario = janela.getInventario();
 
 		pergunta = new Pergunta(janela, true);
-		picterodatilo = fase.getPicterodatilo();
-		caverna = fase.getCaverna();
-		alvo = fase.getAlvo();
+		picterodatilo = faseAlvo.getPicterodatilo();
+		caverna = faseAlvo.getCaverna();
+		alvo = faseAlvo.getAlvo();
 
 		keyEventos = new HashMap<Integer, Boolean>();
 		rnd = new Random();
@@ -105,29 +104,27 @@ public class ControleGeral implements ActionListener, Runnable, KeyListener {
 		audio = new Audio();
 
 		delay = 1;
-		tentativas = 10;
+		tentativas = 1;
 		pontuacao = 0;
 		OpcaoVelocidade = 10;
 		OpcaoVelocidadeMinima = 5;
-		alvoMinimo = 50;
-		AlvoMaximo = 600;
+		alvoMinimo = 40;
+		AlvoMaximo = 480;
 		estado = EST_ERRO;
-
-		janela.add(cores);
-		janela.add(menu);
-		janela.add(config);
-		janela.add(ajuda);
-		janela.add(creditos);
-		janela.add(recordes);
-		janela.add(resultados);
-		janela.add(fase);
-		janela.add(fase2);
 
 		ControleEventos();
 
 		janela.setVisible(true);
 
 		audio.getSndMusic().loop();
+	}
+
+	public void addEventoBotoes() {
+		for (Component botao : pergunta.getJpResposta().getComponents()) {
+			JButton b = (JButton) botao;
+			b.addActionListener(this);
+		}
+
 	}
 
 	private void ControleEventos() {
@@ -146,23 +143,24 @@ public class ControleGeral implements ActionListener, Runnable, KeyListener {
 		creditos.getBtnVoltar().addActionListener(this);
 		ranking.getBtnVoltar().addActionListener(this);
 		ajuda.getBtnVoltar().addActionListener(this);
-		pergunta.getResposta().addKeyListener(this);
 		cores.getVoltar().addActionListener(this);
-		cores.getAvançar().addActionListener(this);
-		pergunta.getBtnOk().addActionListener(this);
+
+		ajuda.getBtnAvancar().addActionListener(this);
 
 	}
 
 	public void actionPerformed(ActionEvent e) {
 
 		if (e.getSource() == menu.getBtnJogar()) {
-			AtualizarTela(cores, menu);
+			AtualizarTela(config, menu);
 		}
-		if (e.getSource() == cores.getAvançar()) {
-			AtualizarTela(config, cores);
+
+		if (e.getSource() == ajuda.getBtnAvancar()) {
+			AtualizarTela(cores, ajuda);
 		}
+
 		if (e.getSource() == cores.getVoltar()) {
-			AtualizarTela(menu, cores);
+			AtualizarTela(ajuda, cores);
 		}
 		if (e.getSource() == menu.getBtnAjuda()) {
 			AtualizarTela(ajuda, menu);
@@ -188,11 +186,16 @@ public class ControleGeral implements ActionListener, Runnable, KeyListener {
 			AtualizarTela(menu, ajuda);
 		}
 		if (e.getSource() == config.getBtnVoltar()) {
-			AtualizarTela(cores, config);
+			AtualizarTela(menu, config);
 		}
-		if (e.getSource() == pergunta.getBtnOk()) {
 
-			verificarResposta();
+		for (Component botao : pergunta.getJpResposta().getComponents()) {
+			JButton b = (JButton) botao;
+
+			if (e.getSource() == b) {
+
+				verificarResposta(b.getText());
+			}
 
 		}
 
@@ -201,14 +204,14 @@ public class ControleGeral implements ActionListener, Runnable, KeyListener {
 			if (config.VerificarSelecao(config.getRadioMedio())) {
 				OpcaoVelocidade = 15;
 				OpcaoVelocidadeMinima = 4;
-				alvoMinimo = 150;
+				alvoMinimo = 80;
 				AlvoMaximo = 500;
 			} else {
 				if (config.VerificarSelecao(config.getRadioDificil())) {
 					OpcaoVelocidade = 15;
 					OpcaoVelocidadeMinima = 10;
-					alvoMinimo = 220;
-					AlvoMaximo = 450;
+					alvoMinimo = 120;
+					AlvoMaximo = 500;
 				}
 			}
 			Iniciar();
@@ -223,9 +226,11 @@ public class ControleGeral implements ActionListener, Runnable, KeyListener {
 			run();
 		}
 		score.FecharVisible();
-		faseAlvo.setLocation(0, 0);
-		AtualizarTela(faseAlvo, config);
-		janela.setSize(886, 620);
+		inventario.getPanelFase().add(faseAlvo);
+		AtualizarTela(inventario, config);
+		AtualizarTela(faseAlvo, ajuda);
+		faseAlvo.requestFocus();
+		janela.setSize(640, 640);
 		runReinicio();
 		Atualizar();
 	}
@@ -245,7 +250,7 @@ public class ControleGeral implements ActionListener, Runnable, KeyListener {
 
 		runControleDoJogo();
 
-		if (estado != EST_PARADO && estado!=EST_AVANCO) {
+		if (estado != EST_PARADO && estado != EST_AVANCO) {
 
 			if (estado == EST_FINAL) {
 				runEstadoFinal();
@@ -258,11 +263,12 @@ public class ControleGeral implements ActionListener, Runnable, KeyListener {
 				}
 			}
 		}
-		if(estado==EST_AVANCO){
+		if (estado == EST_AVANCO) {
 			faseAlvo.FecharVisible();
 			faseAlvo.setLocation(1000, 0);
 			setarItens();
-			
+			inventario.getPanelFase().removeAll();
+			inventario.getPanelFase().add(faseBandeiras);
 			faseBandeiras.AbriVisible();
 			faseBandeiras.requestFocus();
 			runReinicio();
@@ -272,14 +278,9 @@ public class ControleGeral implements ActionListener, Runnable, KeyListener {
 
 	public void runEstadoFinal() {
 
-		if (faseAlvo.isVisible()) {
-			faseAlvo.setLocation(1000, 0);
-			AtualizarTela(score, faseAlvo);
-		}
-		if (faseBandeiras.isVisible()) {
-			faseBandeiras.setLocation(1000, 0);
-			AtualizarTela(score, faseBandeiras);
-		}
+		AtualizarTela(score, inventario);
+
+		inventario.getPanelFase().removeAll();
 
 		janela.setSize(score.getWidth(), score.getHeight());
 
@@ -320,7 +321,7 @@ public class ControleGeral implements ActionListener, Runnable, KeyListener {
 
 		if (pontuacao == NEXT_FASE && faseAlvo.isVisible() && estado != EST_PARADO) {
 			try {
-			
+
 				Thread.sleep(2000);
 			} catch (InterruptedException e) {
 			}
@@ -369,7 +370,7 @@ public class ControleGeral implements ActionListener, Runnable, KeyListener {
 		caverna.velJogador.y += 0.1f;
 
 		int alvo2 = alvo.getPosAlvo().y - 5;
-		
+
 		if (caverna.posJogador.y > alvo2) {
 
 			// Se a posicao vertical do jogador passou da altura do alvo na tela ï¿½ porque
@@ -417,6 +418,7 @@ public class ControleGeral implements ActionListener, Runnable, KeyListener {
 		estado = EST_ERRO;
 		caverna.aparencia = 2;
 		tentativas--;
+		inventario.getTentativas().setText(tentativas + "");
 		audio.getSndErro().play();
 
 	}
@@ -426,15 +428,23 @@ public class ControleGeral implements ActionListener, Runnable, KeyListener {
 		estado = EST_PARADO;
 		caverna.aparencia = 0;
 		pontuacao += 5;
+		inventario.getPontuacao().setText(pontuacao + "");
 
 		// Som de acerto.
 		audio.getSndAcerto().play();
 		audio.getSndPterodatilo().stop();
-		
+
+		if (faseAlvo.isVisible()) {
+			pergunta.AddBotoesCores();
+		}
+		if (faseBandeiras.isVisible()) {
+			pergunta.AddBotoesBanderas();
+		}
+
+		pergunta.vericarResposta(alvo.getCor());
 		pergunta.mudarAlvo(alvo.getCaminho());
-	
+		addEventoBotoes();
 		pergunta.setVisible(true);
-		pergunta.getResposta().grabFocus();
 
 	}
 
@@ -451,7 +461,7 @@ public class ControleGeral implements ActionListener, Runnable, KeyListener {
 
 		alvo.getPosAlvo().x = alvoMinimo + rnd.nextInt(AlvoMaximo);
 
-		if(faseAlvo.isVisible() || faseBandeiras.isVisible()) {
+		if (faseAlvo.isVisible() || faseBandeiras.isVisible()) {
 			audio.getSndPterodatilo().stop();
 			audio.getSndPterodatilo().loop();
 		}
@@ -469,10 +479,7 @@ public class ControleGeral implements ActionListener, Runnable, KeyListener {
 		if (e.getKeyCode() == KeyEvent.VK_ALT && estado != EST_CAINDO) {
 			VoltarMenu();
 		}
-		if(e.getSource()==pergunta.getResposta() && e.getKeyCode() == KeyEvent.VK_ENTER ) {
-			verificarResposta();
-		}
-		
+
 	}
 
 	public void keyReleased(KeyEvent e) {
@@ -534,27 +541,24 @@ public class ControleGeral implements ActionListener, Runnable, KeyListener {
 
 	}
 
-	public void verificarResposta() {
-		op = pergunta.getResposta().getText();
+	public void verificarResposta(String resposta) {
 
-		if (!op.equals("")) {
-			if (op.equalsIgnoreCase(alvo.getCor())) {
-				pontuacao += 5;
-			} else {
+		if (resposta.equalsIgnoreCase(alvo.getCor())) {
+			pontuacao += 5;
+			inventario.getPontuacao().setText(pontuacao + "");
+		} else {
 
-			}
 		}
+
 		pergunta.setVisible(false);
 		faseAlvo.requestFocus();
-		
+
 		runReinicio();
-		pergunta.getResposta().setText("");
-		if (pontuacao>=20)
-		estado=EST_AVANCO;
-		
-		
+		if (pontuacao >= 20)
+			estado = EST_AVANCO;
 
 	}
+
 	public void mudarAlvo() {
 		int numero = rd.nextInt(10);
 		if (faseAlvo.isVisible()) {

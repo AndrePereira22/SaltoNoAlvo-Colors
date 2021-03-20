@@ -14,7 +14,7 @@ public class Picterodatilo {
 
 	public Picterodatilo(String url) {
 
-		posPtero = new Point(0, 125);
+		posPtero = new Point(0, 80);
 		velPtero = 30;
 		imgPterodatilo = new ImageIcon(getClass().getResource(url));
 	}

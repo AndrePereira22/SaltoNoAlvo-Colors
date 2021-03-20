@@ -16,7 +16,7 @@ public class Alvo {
 	
 	public Alvo(String url,String cor) {
 
-		posAlvo = new Point(0, 546);
+		posAlvo = new Point(0, 490);
 		largAlvo = 50;
 		try {
 			alvo =ImageIO.read(getClass().getClassLoader().getResourceAsStream(url));

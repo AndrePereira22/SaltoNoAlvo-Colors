@@ -1,6 +1,5 @@
 package Modelo;
 
-
 import javax.swing.JPanel;
 
 import java.awt.*;
@@ -10,55 +9,54 @@ public abstract class Jogo extends JPanel implements Runnable {
 
 	private static final long serialVersionUID = 1L;
 
-	//dimensões
-	 private int LARGURA;
-	 private int ALTURA;
-	
+	// dimensões
+	private int LARGURA = 640;
+	private int ALTURA = 640;
+
 	private Thread thread;
 	private boolean running;
-	
+
 	private BufferedImage image;
 	protected Graphics2D g;
-	private int FPS =10;
+	private int FPS = 10;
 
 	@SuppressWarnings("unused")
 	private Double averageFPS;
 
-	public Jogo(int LARGURA, int ALTURA) {
+	public Jogo() {
 		super();
-		this.ALTURA=ALTURA;
-		this.LARGURA=LARGURA;
-		
-		setPreferredSize(new Dimension(LARGURA,ALTURA));
+
+		setPreferredSize(new Dimension(LARGURA, ALTURA));
 		setFocusable(true);
 		requestFocus();
 		Load();
 	}
-	
+
 	public int getLARGURA() {
 		return LARGURA;
 	}
 
 	public abstract void Load();
-	
-	 public void terminate() {
-		 
-	     running=false;
-	    }
-	 public void addNotify() {
-			super.addNotify();
 
-			if (thread == null) {
-				thread = new Thread(this);
-				thread.start();
-			}
+	public void terminate() {
+
+		running = false;
+	}
+
+	public void addNotify() {
+		super.addNotify();
+
+		if (thread == null) {
+			thread = new Thread(this);
+			thread.start();
 		}
+	}
 
 	// Funçoes
 	public void run() {
 		running = true;
 
-		image = new BufferedImage(LARGURA,ALTURA, BufferedImage.TYPE_INT_RGB);
+		image = new BufferedImage(LARGURA, ALTURA, BufferedImage.TYPE_INT_RGB);
 		g = (Graphics2D) image.getGraphics();
 
 		long startTime;
@@ -97,22 +95,29 @@ public abstract class Jogo extends JPanel implements Runnable {
 				totalTime = 0;
 			}
 		}
-		
+
 		gameDraw();
 	}
 
 	public abstract void Update();
-	
+
 	public abstract void Render();
 
 	private void gameDraw() {
-		Graphics2D g2 = (Graphics2D) this.getGraphics();
-		g2.drawImage(image, 0, 0, null);
-		g2.dispose();
+		try {
+			Graphics2D g2 = (Graphics2D) this.getGraphics();
+			g2.drawImage(image, 0, 0, null);
+			g2.dispose();
+		} catch (java.lang.NullPointerException e) {
+			// TODO: handle exception
+		}
+
 	}
+
 	public void setRunning(boolean running) {
 		this.running = running;
 	}
+
 	public boolean isRunning() {
 		return running;
 	}

@@ -18,7 +18,7 @@ public class Cores extends JPanel {
 	
 	private JLabel lblBlue,lblRed,lblGreen,lblBlack,lblWhite,lblBrown,lblGrey,lblPink,lblYellow, lblOrange, lblAjuda,fundo;
 	private JLabel  alvoAzul,alvoVerde,alvoPreto,alvoBranco,alvoMarrom,alvoRosa,alvoAmarelo,alvoLaranja,alvoVermelho,alvoCinza;
-	private JButton Voltar,avançar;
+	private JButton Voltar;
 	private Font jokerman;
 	
 
@@ -140,12 +140,7 @@ public class Cores extends JPanel {
 		Voltar.setContentAreaFilled(false);
 		add(Voltar);
 
-		avançar = new JButton("AVAN\u00C7AR");
-		avançar.setBounds(367, 493, 228, 43);
-		avançar.setFont(jokerman ); 
-		avançar.setForeground(Color.WHITE);
-		avançar.setContentAreaFilled(false);
-		add(avançar);
+
 
 		fundo = new JLabel("New label");
 		fundo.setIcon((new ImageIcon(getClass().getResource("/menu.gif"))));
@@ -166,13 +161,5 @@ public class Cores extends JPanel {
 	}
 
 
-	public JButton getAvançar() {
-		return avançar;
-	}
-
-
-	public void setAvançar(JButton avançar) {
-		this.avançar = avançar;
-	}
 
 }
